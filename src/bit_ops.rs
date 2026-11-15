@@ -117,20 +117,22 @@ fn bit_shift(buf: &mut [u8; PASSWORD_LEN], shift_by: isize) {
 
     while shift_bytes > PASSWORD_DATA_LEN - 1 { shift_bytes -= PASSWORD_DATA_LEN - 1}
 
-    let mask = (1 << shift_bits) - 1;
+    let mask = (1u32 << shift_bits) - 1;
     if shift_by > 0 { // positive shift
-        let mut byte = (shift_input[if shift_bits == 0 { 0 } else { PASSWORD_DATA_LEN - 2 }] >> (8 - shift_bits)) & mask;
+        let mut byte = (shift_input[if shift_bits == 0 { 0 } else { PASSWORD_DATA_LEN - 2 }] as u32 >> (8 - shift_bits)) & mask;
         for b in shift_input[..PASSWORD_DATA_LEN - 1].iter() {
-            work_buf[shift_bytes] = byte | (*b << shift_bits);
+            let b = *b as u32;
+            work_buf[shift_bytes] = (byte | (b << shift_bits)) as u8;
             byte = (b >> (8 - shift_bits)) & mask;
             shift_bytes = (shift_bytes + 1) % (PASSWORD_DATA_LEN - 1);
         }
     } else if shift_by < 0 { // negative shift
-        let mut byte = (shift_input[if shift_bits == 0 { PASSWORD_DATA_LEN - 2 } else { 0 }] & mask) << (8 - shift_bits);
+        let mut byte = (shift_input[if shift_bits == 0 { PASSWORD_DATA_LEN - 2 } else { 0 }] as u32 & mask) << (8 - shift_bits);
         let mut shift_idx = (PASSWORD_DATA_LEN - 2 - shift_bytes) % (PASSWORD_DATA_LEN - 1);
 
         for b in shift_input.iter().rev() {
-            work_buf[shift_idx] = byte | (b >> shift_bits);
+            let b = *b as u32;
+            work_buf[shift_idx] = (byte | (b >> shift_bits)) as u8;
             byte = (b & mask) << (8 - shift_bits);
 
             shift_idx = (shift_idx + PASSWORD_DATA_LEN - 2) % (PASSWORD_DATA_LEN - 1);
