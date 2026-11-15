@@ -10,15 +10,14 @@ Add nookcodes as a dependency to your Cargo.toml:
 
 ```toml
 [dependencies]
-nookcodes = "0.5.0"
+nookcodes = "0.5.2"
 ```
 
 ## Example
 ```rust
 use nookcodes::{
     PasswordBytes,
-    decode,
-    PASSWORD_LEN
+    decode
 };
 
 const CHAR_MAP: [&str; 256] = [ // table mapping AC text encoding to Unicode
