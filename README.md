@@ -10,7 +10,7 @@ Add nookcodes as a dependency to your Cargo.toml:
 
 ```toml
 [dependencies]
-nookcodes = "0.5.2"
+nookcodes = "0.5.3"
 ```
 
 ## Example
